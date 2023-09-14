@@ -15,5 +15,5 @@ npm install #Install all neccessary dependencies and you are all set
 
 ```
 
-Make a GET request with UTC or UNIX date format on "localhost.../api/YOUR-DATE/" after initializing the project on your local machine.
+Make a GET request with UTC or UNIX date format on "localhost.../api/[your-date]/" after initializing the project on your local machine.
 It will send you back json file with both UTC and UNIX times in it.
