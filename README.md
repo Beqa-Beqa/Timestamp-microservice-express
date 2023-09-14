@@ -1,7 +1,11 @@
 # Timestamp-microservice-express
 <br/>
-## My first express project from one of the FCC challenges 
+## My first express project from one of the FCC challenges
+
 [Challenge URL](https://www.freecodecamp.org/learn/back-end-development-and-apis/back-end-development-and-apis-projects/timestamp-microservice)
+
+
+## Set up on your local machine
 
 ```bash
 git clone https://github.com/Beqa-Beqa/Timestamp-microservice-express.git   #This will clone the repository
