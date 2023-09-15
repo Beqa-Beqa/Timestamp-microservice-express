@@ -40,7 +40,7 @@ const formatDateTime = (date) => {
   }
 
   const year = utc.getFullYear();
-  const month = months[utc.getMonth()];
+  const month = months[utc.getMonth()].slice(0, 3);
   const dayOfWeek = daysOfWeek[utc.getDay()].slice(0, 3);
   const dateOfMonth = utc.getDate();
   const hhmmss = `${utc.getHours().toString().padStart(2, "0")}:${utc.getMinutes().toString().padStart(2, "0")}:${utc.getSeconds().toString().padStart(2, "0")} GMT`;
