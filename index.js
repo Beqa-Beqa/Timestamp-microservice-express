@@ -26,17 +26,23 @@ app.get("/api/hello", (req,res) => {
 
 const formatDateTime = (date) => {
   let unix;
-  let utc;
+  let dateCopy = date;
 
-  if(date && date.includes("-")) {
-    unix = Number((new Date(date).getTime()).toFixed(0));
-    utc = new Date(unix);
-  } else if(date && !date.includes("-")){
-    unix = Number(date);
-    utc = new Date(unix);
+  if(Number(dateCopy)){
+    dateCopy = Number(date);
+  }
+
+  if(date){
+    unix = Number(new Date(dateCopy).getTime().toFixed(0));
   } else {
-    unix = Number(new Date().getTime());
-    utc = new Date(unix);
+    unix = Number((new Date().getTime()).toFixed(0));
+  }
+  const utc = new Date(unix);
+
+  if(!unix) {
+    return {
+      error: "Invalid Date"
+    }
   }
 
   const year = utc.getFullYear();
@@ -61,19 +67,31 @@ const daysOfWeek = [
 ];
 
 app.get("/api/:date", (req,res) => {
-  const {unix, utc} = formatDateTime(req.params.date);
-  res.json({
-    unix: unix,
-    utc: utc
-  });
+  const {unix, utc, error} = formatDateTime(req.params.date);
+  if(error) {
+    res.json({
+      error: error
+    });
+  } else {
+    res.json({
+      unix: unix,
+      utc: utc
+    });
+  }
 });
 
 app.get("/api", (req,res) => {
-  const {unix, utc} = formatDateTime();
-  res.json({
-    unix: unix,
-    utc: utc
-  });
+  const {unix, utc, error} = formatDateTime();
+  if(error) {
+    res.json({
+      error: error
+    });
+  } else {
+    res.json({
+      unix: unix,
+      utc: utc
+    });
+  }
 });
 
 // Define port 
