@@ -23,20 +23,57 @@ app.get("/api/hello", (req,res) => {
 
 // Timestamp Microservice
 // Enter date either in unix seconds or utc time and it will return json with both utc and unix times
-app.get("/api/:date", (req,res) => {
-  if(req.params.date.includes("-")) {
-    const unix = Number((new Date(req.params.date).getTime()).toFixed(0));
-    const utc = new Date(unix).toString();
-    res.json({
-      unix: unix,
-      utc: utc 
-    });
+
+const formatDateTime = (date) => {
+  let unix;
+  let utc;
+
+  if(date && date.includes("-")) {
+    unix = Number((new Date(date).getTime()).toFixed(0));
+    utc = new Date(unix);
+  } else if(date && !date.include("-")){
+    unix = Number(date);
+    utc = new Date(unix);
   } else {
-    res.json({
-      unix: Number(req.params.date),
-      utc: new Date(Number(req.params.date)).toString()
-    });
+    unix = Number(new Date().getTime());
+    utc = new Date(unix);
   }
+
+  const year = utc.getFullYear();
+  const month = months[utc.getMonth()];
+  const dayOfWeek = daysOfWeek[utc.getDay()].slice(0, 3);
+  const dateOfMonth = utc.getDate();
+  const hhmmss = `${utc.getHours().toString().padStart(2, "0")}:${utc.getMinutes().toString().padStart(2, "0")}:${utc.getSeconds().toString().padStart(2, "0")} GMT`;
+
+  return {
+    unix: unix,
+    utc: `${dayOfWeek}, ${dateOfMonth} ${month} ${year} ${hhmmss}`
+  }
+}
+
+const months = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+const daysOfWeek = [
+  "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+];
+
+app.get("/api/:date", (req,res) => {
+  const {unix, utc} = formatDateTime(req.params.date);
+  res.json({
+    unix: unix,
+    utc: utc
+  });
+});
+
+app.get("/api", (req,res) => {
+  const {unix, utc} = formatDateTime();
+  res.json({
+    unix: unix,
+    utc: utc
+  });
 });
 
 // Define port 
