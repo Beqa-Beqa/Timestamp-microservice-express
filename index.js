@@ -31,7 +31,7 @@ const formatDateTime = (date) => {
   if(date && date.includes("-")) {
     unix = Number((new Date(date).getTime()).toFixed(0));
     utc = new Date(unix);
-  } else if(date && !date.include("-")){
+  } else if(date && !date.includes("-")){
     unix = Number(date);
     utc = new Date(unix);
   } else {
