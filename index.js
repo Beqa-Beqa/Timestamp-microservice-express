@@ -23,13 +23,13 @@ app.get("/api/hello", (req,res) => {
 
 // Timestamp Microservice
 // Enter date either in unix seconds or utc time and it will return json with both utc and unix times
-const checkInvalidDate = (date) => !date.toUTCString() ? true : false;
+const checkInvalidDate = (date) => date.toUTCString() === "Invalid Date";
 
 app.get("/api/:date", (req,res) => {
   let date = new Date(req.params.date);
 
   if(checkInvalidDate(date)){
-    date = (+req.params.date);
+    date = new Date(Number(req.params.date));
   }
 
   if(checkInvalidDate(date)){
