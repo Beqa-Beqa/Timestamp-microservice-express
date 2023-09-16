@@ -23,75 +23,33 @@ app.get("/api/hello", (req,res) => {
 
 // Timestamp Microservice
 // Enter date either in unix seconds or utc time and it will return json with both utc and unix times
-
-const formatDateTime = (date) => {
-  let unix;
-  let dateCopy = date;
-
-  if(Number(dateCopy)){
-    dateCopy = Number(date);
-  }
-
-  if(date){
-    unix = Number(new Date(dateCopy).getTime().toFixed(0));
-  } else {
-    unix = Number((new Date().getTime()).toFixed(0));
-  }
-  const utc = new Date(unix);
-
-  if(!unix) {
-    return {
-      error: "Invalid Date"
-    }
-  }
-
-  const year = utc.getFullYear();
-  const month = months[utc.getMonth()].slice(0, 3);
-  const dayOfWeek = daysOfWeek[utc.getDay()].slice(0, 3);
-  const dateOfMonth = utc.getDate();
-  const hhmmss = `${utc.getHours().toString().padStart(2, "0")}:${utc.getMinutes().toString().padStart(2, "0")}:${utc.getSeconds().toString().padStart(2, "0")} GMT`;
-
-  return {
-    unix: unix,
-    utc: `${dayOfWeek}, ${dateOfMonth} ${month} ${year} ${hhmmss}`
-  }
-}
-
-const months = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
-
-const daysOfWeek = [
-  "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-];
+const checkInvalidDate = (date) => !date.toUTCString() ? true : false;
 
 app.get("/api/:date", (req,res) => {
-  const {unix, utc, error} = formatDateTime(req.params.date);
-  if(error) {
-    res.json({
-      error: error
-    });
-  } else {
-    res.json({
-      unix: unix,
-      utc: utc
-    });
+  let date = new Date(req.params.date);
+
+  if(checkInvalidDate(date)){
+    date = (+req.params.date);
   }
+
+  if(checkInvalidDate(date)){
+    res.json({error: "Invalid Date"});
+    return;
+  }
+
+  res.json({
+    unix: date.getTime(),
+    utc: date.toUTCString()
+  })
 });
 
 app.get("/api", (req,res) => {
-  const {unix, utc, error} = formatDateTime();
-  if(error) {
-    res.json({
-      error: error
-    });
-  } else {
-    res.json({
-      unix: unix,
-      utc: utc
-    });
-  }
+  const dateNow = new Date();
+
+  res.json({
+    unix: dateNow.getTime(),
+    utc: dateNow.toUTCString()
+  })
 });
 
 // Define port 
